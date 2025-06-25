@@ -42,6 +42,10 @@ public abstract class GuiEntityRendererMixin extends PictureInPictureRenderer<Gu
     @WrapOperation(method = "renderToTexture(Lnet/minecraft/client/gui/render/state/pip/GuiEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Lighting;setupFor(Lcom/mojang/blaze3d/platform/Lighting$Entry;)V"))
     private <S extends EntityRenderState> void setFiguraRenderProperties(Lighting instance, Lighting.Entry entry, Operation<Void> original, @Local(argsOnly = true) GuiEntityRenderState guiEntityRenderState) {
         GuiEntityRenderStateExtension extended = (GuiEntityRenderStateExtension) (Object) guiEntityRenderState;
+        if (extended.getRenderMode() == null) {
+            original.call(instance, entry);
+            return;
+        }
         switch (extended.getRenderMode()) {
             case FIGURA_GUI -> {
                 UIHelper.useFiguraLighting();
